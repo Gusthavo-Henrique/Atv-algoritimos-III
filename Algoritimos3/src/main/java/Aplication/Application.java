@@ -1,28 +1,18 @@
-package Aplication;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import entities.Aluno;
-
-public class Application {
+public class Main {
     public static void main(String[] args) {
         // Ler o arquivo JSON
         List<Aluno> alunos = lerArquivoJSON("C:\\Users\\Umpalumpa\\eclipse-workspace\\Algoritimos3\\target\\teste1.json");
 
-        //alunos matriculados na disciplina AED3
-        List<Aluno> alunosMatriculadosAED3 = filtrarAlunosPorDisciplinaSemestre(alunos, "AED3", "2023.1");
-
-        // alunos encontrados
-        for (Aluno aluno : alunosMatriculadosAED3) {
-            System.out.println(aluno.getId());
-        }
+        // Verificar a aprovação dos alunos na disciplina AED3
+        verificarAprovacaoAED3(alunos);
     }
 
     public static List<Aluno> lerArquivoJSON(String caminhoArquivo) {
@@ -37,17 +27,22 @@ public class Application {
         return alunos;
     }
 
-    public static List<Aluno> filtrarAlunosPorDisciplinaSemestre(List<Aluno> alunos, String disciplina, String semestre) {
-        List<Aluno> alunosFiltrados = new ArrayList<>();
+    public static void verificarAprovacaoAED3(List<Aluno> alunos) {
+        System.out.println("Aprovação dos alunos na disciplina AED3:");
+
         for (Aluno aluno : alunos) {
-            List<Aluno> disciplinas = aluno.getDisciplina();
-            for (Aluno d : disciplinas) {
-                if (d.getDisciplina().equals(disciplina) && d.getSemestre().equals(semestre)) {
-                    alunosFiltrados.add(aluno);
+            List<Disciplina> disciplinas = aluno.getDisciplinas();
+            for (Disciplina disciplina : disciplinas) {
+                if (disciplina.getNome().equals("AED3")) {
+                    double media = disciplina.getMedia();
+                    if (media >= 7.0) {
+                        System.out.println(aluno.getNome() + " - Aprovado");
+                    } else {
+                        System.out.println(aluno.getNome() + " - Reprovado");
+                    }
                     break;
                 }
             }
         }
-        return alunosFiltrados;
     }
 }
