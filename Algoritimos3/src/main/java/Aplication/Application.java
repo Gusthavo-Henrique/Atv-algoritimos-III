@@ -1,6 +1,8 @@
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,26 +13,29 @@ public class Main {
             // Carregar os dados do arquivo JSON
             Gson gson = new Gson();
             FileReader reader = new FileReader("C:\\Users\\Umpalumpa\\eclipse-workspace\\Algoritimos3\\target\\teste1.json");
-            Map<String, Aluno> alunosMap = gson.fromJson(reader, new TypeToken<Map<String, Aluno>>() {}.getType());
+            List<Aluno> alunos = gson.fromJson(reader, new TypeToken<List<Aluno>>() {}.getType());
             
             // Encontrar o aluno pelo CPF
             String cpfBuscado = "111.111.111-11";
-            Aluno aluno = alunosMap.get(cpfBuscado);
+            Aluno alunoBuscado = null;
             
-            if (aluno != null) {
-                // Calcular a média geral do aluno
-                double somaNotas = 0;
-                int totalDisciplinas = 0;
-                
-                for (Disciplina disciplina : aluno.getDisciplinas()) {
-                    somaNotas += disciplina.getNotaFinal();
-                    totalDisciplinas++;
+            for (Aluno aluno : alunos) {
+                if (aluno.getCpf().equals(cpfBuscado)) {
+                    alunoBuscado = aluno;
+                    break;
                 }
+            }
+            
+            if (alunoBuscado != null) {
+                // Ordenar os alunos pela média em ordem decrescente
+                Collections.sort(alunos, Comparator.comparing(Aluno::getMediaGeral).reversed());
                 
-                double mediaGeral = somaNotas / totalDisciplinas;
+                // Encontrar a posição do aluno buscado no ranking
+                int posicao = alunos.indexOf(alunoBuscado) + 1;
                 
-                // Exibir a média geral
-                System.out.println("Média geral do aluno " + aluno.getNome() + " (CPF: " + cpfBuscado + "): " + mediaGeral);
+                // Exibir o ranking do aluno
+                System.out.println("Ranking do aluno " + alunoBuscado.getNome() + " (CPF: " + cpfBuscado + ") no semestre 2023.1:");
+                System.out.println("Posição: " + posicao + " de " + alunos.size());
             } else {
                 System.out.println("Aluno não encontrado.");
             }
