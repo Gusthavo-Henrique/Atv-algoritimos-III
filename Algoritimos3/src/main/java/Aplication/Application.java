@@ -1,50 +1,42 @@
+import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
-        // Ler o arquivo JSON
-        List<Aluno> alunos = lerArquivoJSON("C:\\Users\\Umpalumpa\\eclipse-workspace\\Algoritimos3\\target\\teste1.json");
-
-        // Mostrar todas as matérias cursadas pelo aluno 111.111.111-11
-        mostrarMateriasDoAluno(alunos, "111.111.111-11");
-    }
-
-    public static List<Aluno> lerArquivoJSON(String caminhoArquivo) {
-        List<Aluno> alunos = null;
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(caminhoArquivo));
+            // Carregar os dados do arquivo JSON
             Gson gson = new Gson();
-            alunos = gson.fromJson(bufferedReader, new TypeToken<List<Aluno>>(){}.getType());
-        } catch (FileNotFoundException e) {
+            FileReader reader = new FileReader("C:\\Users\\Umpalumpa\\eclipse-workspace\\Algoritimos3\\target\\teste1.json");
+            Map<String, Aluno> alunosMap = gson.fromJson(reader, new TypeToken<Map<String, Aluno>>() {}.getType());
+            
+            // Encontrar o aluno pelo CPF
+            String cpfBuscado = "111.111.111-11";
+            Aluno aluno = alunosMap.get(cpfBuscado);
+            
+            if (aluno != null) {
+                // Calcular a média geral do aluno
+                double somaNotas = 0;
+                int totalDisciplinas = 0;
+                
+                for (Disciplina disciplina : aluno.getDisciplinas()) {
+                    somaNotas += disciplina.getNotaFinal();
+                    totalDisciplinas++;
+                }
+                
+                double mediaGeral = somaNotas / totalDisciplinas;
+                
+                // Exibir a média geral
+                System.out.println("Média geral do aluno " + aluno.getNome() + " (CPF: " + cpfBuscado + "): " + mediaGeral);
+            } else {
+                System.out.println("Aluno não encontrado.");
+            }
+            
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return alunos;
-    }
-
-    public static void mostrarMateriasDoAluno(List<Aluno> alunos, String cpf) {
-        System.out.println("Matérias cursadas pelo aluno " + cpf + ":");
-
-        for (Aluno aluno : alunos) {
-            if (aluno.getCpf().equals(cpf)) {
-                List<Disciplina> disciplinas = aluno.getDisciplinas();
-                for (Disciplina disciplina : disciplinas) {
-                    System.out.println("Matéria: " + disciplina.getNome());
-                    System.out.println("Média Final: " + disciplina.getMedia());
-                    System.out.println("Total de Faltas: " + disciplina.getFaltas());
-                    System.out.println("Situação: " + disciplina.getSituacao());
-                    System.out.println("--------------------");
-                }
-                return; 
-            }
-        }
-
-        // Caso nenhum aluno seja encontrado com o CPF informado
-        System.out.println("Aluno com CPF " + cpf + " não encontrado.");
     }
 }
