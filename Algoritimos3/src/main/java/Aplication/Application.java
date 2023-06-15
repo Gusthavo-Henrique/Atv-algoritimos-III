@@ -11,8 +11,8 @@ public class Main {
         // Ler o arquivo JSON
         List<Aluno> alunos = lerArquivoJSON("C:\\Users\\Umpalumpa\\eclipse-workspace\\Algoritimos3\\target\\teste1.json");
 
-        // Verificar a aprovação dos alunos na disciplina AED3
-        verificarAprovacaoAED3(alunos);
+        // Calcular e mostrar a média das notas na disciplina AED3 no semestre 2023.1
+        calcularMediaAED3(alunos);
     }
 
     public static List<Aluno> lerArquivoJSON(String caminhoArquivo) {
@@ -27,22 +27,18 @@ public class Main {
         return alunos;
     }
 
-    public static void verificarAprovacaoAED3(List<Aluno> alunos) {
-        System.out.println("Aprovação dos alunos na disciplina AED3:");
+    public static void calcularMediaAED3(List<Aluno> alunos) {
+        System.out.println("Média das notas dos alunos na disciplina AED3 no semestre 2023.1:");
+
+        int contadorAlunos = 0;
+        double somaNotas = 0.0;
 
         for (Aluno aluno : alunos) {
             List<Disciplina> disciplinas = aluno.getDisciplinas();
             for (Disciplina disciplina : disciplinas) {
-                if (disciplina.getNome().equals("AED3")) {
-                    double media = disciplina.getMedia();
-                    if (media >= 7.0) {
-                        System.out.println(aluno.getNome() + " - Aprovado");
-                    } else {
-                        System.out.println(aluno.getNome() + " - Reprovado");
-                    }
+                if (disciplina.getNome().equals("AED3") && disciplina.getSemestre().equals("2023.1")) {
+                    contadorAlunos++;
+                    somaNotas += disciplina.getMedia();
                     break;
                 }
             }
-        }
-    }
-}
