@@ -40,7 +40,7 @@ public class Main {
                     System.out.println("Situação: " + disciplina.getSituacao());
                     System.out.println("--------------------");
                 }
-                return; // O aluno foi encontrado, então podemos interromper a execução
+                return; 
             }
         }
 
