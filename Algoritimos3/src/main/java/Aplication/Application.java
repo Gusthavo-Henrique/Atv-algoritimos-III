@@ -11,8 +11,8 @@ public class Main {
         // Ler o arquivo JSON
         List<Aluno> alunos = lerArquivoJSON("C:\\Users\\Umpalumpa\\eclipse-workspace\\Algoritimos3\\target\\teste1.json");
 
-        // Calcular e mostrar a média das notas na disciplina AED3 no semestre 2023.1
-        calcularMediaAED3(alunos);
+        // Mostrar todas as matérias cursadas pelo aluno 111.111.111-11
+        mostrarMateriasDoAluno(alunos, "111.111.111-11");
     }
 
     public static List<Aluno> lerArquivoJSON(String caminhoArquivo) {
@@ -27,18 +27,24 @@ public class Main {
         return alunos;
     }
 
-    public static void calcularMediaAED3(List<Aluno> alunos) {
-        System.out.println("Média das notas dos alunos na disciplina AED3 no semestre 2023.1:");
-
-        int contadorAlunos = 0;
-        double somaNotas = 0.0;
+    public static void mostrarMateriasDoAluno(List<Aluno> alunos, String cpf) {
+        System.out.println("Matérias cursadas pelo aluno " + cpf + ":");
 
         for (Aluno aluno : alunos) {
-            List<Disciplina> disciplinas = aluno.getDisciplinas();
-            for (Disciplina disciplina : disciplinas) {
-                if (disciplina.getNome().equals("AED3") && disciplina.getSemestre().equals("2023.1")) {
-                    contadorAlunos++;
-                    somaNotas += disciplina.getMedia();
-                    break;
+            if (aluno.getCpf().equals(cpf)) {
+                List<Disciplina> disciplinas = aluno.getDisciplinas();
+                for (Disciplina disciplina : disciplinas) {
+                    System.out.println("Matéria: " + disciplina.getNome());
+                    System.out.println("Média Final: " + disciplina.getMedia());
+                    System.out.println("Total de Faltas: " + disciplina.getFaltas());
+                    System.out.println("Situação: " + disciplina.getSituacao());
+                    System.out.println("--------------------");
                 }
+                return; // O aluno foi encontrado, então podemos interromper a execução
             }
+        }
+
+        // Caso nenhum aluno seja encontrado com o CPF informado
+        System.out.println("Aluno com CPF " + cpf + " não encontrado.");
+    }
+}
